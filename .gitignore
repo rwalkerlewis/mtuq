@@ -22,3 +22,12 @@ docs/library/generated
 scripts/
 
 .git/
+
+*.[zrt]
+*.[abc]
+*.[0123456789]
+*.dat
+*.BHZ
+*.BHN
+*.BHE
+*.PKL
