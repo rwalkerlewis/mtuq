@@ -32,9 +32,9 @@ if __name__=='__main__':
     # from a regional seismic array
     #
 
-    path_data=    fullpath('data/morocco/2019321/*.[zrt]')
-    path_weights= fullpath('data/morocco/2019321/weights.dat')
-    event_id=     '20090407201255351'
+    path_data=    fullpath('data/morocco/2019321_RTZ/*.[zrt]')
+    path_weights= fullpath('data/morocco/2019321_RTZ/weights.dat')
+    event_id=     '2019321'
     model=        'ak135'
 
 
@@ -114,10 +114,10 @@ if __name__=='__main__':
     #
 
     origin = Origin({
-        'time': '2009-04-07T20:12:55.000000Z',
-        'latitude': 61.454200744628906,
-        'longitude': -149.7427978515625,
-        'depth_in_m': 33033.599853515625,
+        'time': '2019-11-17T08:39:09.740000Z',
+        'latitude': 32.645,
+        'longitude': -4.192,
+        'depth_in_m': 10000.0,
         })
 
 
