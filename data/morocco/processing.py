@@ -32,7 +32,7 @@ st_full = read('2019321_ZNE/*')
 
 # Cut waveforms to time of interest
 
-st = st_full.copy().slice(main_time-20, main_time + 600)
+st = st_full.copy().slice(main_time-600, main_time + 600)
 
 # Add network codes
 for tr in st:
