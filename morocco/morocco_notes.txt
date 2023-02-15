@@ -1,0 +1,4 @@
+# Notes for Moroccan SAC
+- SAC headers past jday are not set for origin
+- Surface wave windows were too long for near events (window preceeded beginning of seismogram)
+

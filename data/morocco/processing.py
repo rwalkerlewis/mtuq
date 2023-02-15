@@ -18,13 +18,16 @@ from pysep.utils.cap_sac import (append_sac_headers, write_cap_weights_files,
 t1 = UTCDateTime('2019-11-17T00:00:00.000000Z')
 t2 = UTCDateTime('2019-11-17T23:59:59.950000Z')
 fdsn_client = Client('GEOFON')
+iris_client = Client('IRIS')
 
 # Add event - Mainshock ()
-main_time = UTCDateTime('2019-11-17T08:39:09')
+main_time = UTCDateTime('2019-11-17T08:39:09.740000')
 m_t1 = main_time - 30
 m_t2 = main_time + 30
 
 cat = fdsn_client.get_events(starttime=m_t1, endtime=m_t2)
+cat_iris = iris_client.get_events(starttime=m_t1, endtime=m_t2)
+
 event = cat[0]
 
 # Load waveforms
@@ -32,7 +35,7 @@ st_full = read('2019321_ZNE/*')
 
 # Cut waveforms to time of interest
 
-st = st_full.copy().slice(main_time-600, main_time + 600)
+st = st_full.copy().slice(main_time - 300, main_time + 600)
 
 # Add network codes
 for tr in st:
@@ -57,6 +60,12 @@ no_resp = ['RTC','TFR','TIS']
 for sta in no_resp:
     for tr in st.select(station=sta):
         st.remove(tr)
+
+# Add event origin time to SAC header files
+for tr in st:
+    tr.stats.sac.nzhour = main_time.hour
+    tr.stats.sac.nzmin = main_time.minute
+    tr.stats.sac.nzsec = main_time.second
 
 # Downsample to 20 Hz
 for tr in st:

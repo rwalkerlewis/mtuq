@@ -344,7 +344,7 @@ class ProcessData(object):
 
         if origin is None:
             origin = getattr(traces, 'origin', None)
-
+            
         # overwrite existing data?
         if overwrite:
             traces = traces
@@ -476,6 +476,7 @@ class ProcessData(object):
                         origin.depth_in_m/1000.,
                         m_to_deg(distance_in_m),
                         phase_list=['p', 's', 'P', 'S'])
+                # print(arrivals)
                 try:
                     picks['P'] = get_arrival(arrivals, 'p')
                 except:
@@ -512,11 +513,14 @@ class ProcessData(object):
 
             if self.window_type == 'body_wave':
                 # reproduces CAPUAF body wave window
+                # print('Picks P: ' + str(picks['P']) + '\n')
                 starttime = picks['P'] - 0.4*self.window_length
                 endtime = starttime + self.window_length
-
+                # print('Origin Time: ' + str(origin.time) + '\n')
                 starttime += float(origin.time)
                 endtime += float(origin.time)
+                # print('Start Time: ' + str(starttime) + '\n')
+                # print('End Time: ' + str(endtime) + '\n')
 
             elif self.window_type == 'surface_wave':
                 # reproduces CAPUAF surface wave window
@@ -589,6 +593,9 @@ class ProcessData(object):
 
             # cuts trace and adjusts metadata
             if self.window_type is not None:
+                # print('Start Time: ' + str(starttime) + '\n')
+                # print('Trace Start Time: ' + str(trace.stats.starttime) + '\n')
+                # print('End Time: ' + str(endtime) + '\n')
                 cut(trace, starttime, endtime)
 
             taper(trace.data)

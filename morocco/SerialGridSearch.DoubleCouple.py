@@ -136,8 +136,9 @@ if __name__=='__main__':
     stations = data.get_stations()
 
 
-    print('Processing data...\n')
+    print('Processing Body Wave data...\n')
     data_bw = data.map(process_bw)
+    print('Processing Surface Wave data...\n')    
     data_sw = data.map(process_sw)
 
 
