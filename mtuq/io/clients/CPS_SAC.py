@@ -20,7 +20,7 @@ from obspy.geodetics import gps2dist_azimuth
 # A CPS run where the file96 results are converted to SAC files produces
 
 POSITION = [
-    '8',  '5',           # t
+    '8',  '5',             # t
     '10', '7', '4', '2',   # r
     '9',  '6', '3', '1',   # z
 ]
@@ -41,7 +41,7 @@ class Client(ClientBase):
 
     .. code::
 
-        from mtuq.io.clients.FK_SAC import Client
+        from mtuq.io.clients.CPS_SAC import Client
         db = Client(path_or_url)
 
     Then the database client can be used to generate GreensTensors:
