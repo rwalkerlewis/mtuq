@@ -2,7 +2,8 @@
 import obspy
 import numpy as np
 
-from os.path import basename, exists
+from os.path import basename, exists, isdir, join
+from os import listdir
 from mtuq.greens_tensor.FK import GreensTensor
 from mtuq.io.clients.base import Client as ClientBase
 from mtuq.util.signal import resample
@@ -127,19 +128,52 @@ class Client(ClientBase):
 
         # dep = str(int(round(origin.depth_in_m/1000.)))
         # dep = str(int(np.ceil(origin.depth_in_m/1000.))).zfill(4)
-        dep = "{:06.1f}".format(np.ceil(origin.depth_in_m/1000.))
-        dep_folder = dep[:-2]
+        dep_desired = "{:06.1f}".format(
+            np.ceil(origin.depth_in_m/1000.) * 10)[:-2]
+        # dep_folder_desired = dep[:-2]
 
         # dst = str(int(round(distance_in_m/1000.)))
         # dst = str(int(np.ceil(distance_in_m/1000.))).zfill(4)
-        dst = "{:06.1f}".format(np.ceil(distance_in_m/1000.))
+        dst_desired = "{:07.1f}".format(np.ceil(distance_in_m/1000.) * 10)[:-2]
 
         if self.include_mt:
 
+            # Review all folders in CPS Green's Function directory. Folder
+            # names correspond with depth of source. Find the folder
+            # with a value closest to the one we are after.
+            all_entries = listdir(self.path)
+
+            # Filter out folder names that are numeric
+            numeric_folder_names = [entry for entry in all_entries
+                                    if entry.isdigit() and isdir(join(self.path, entry))]
+
+            # Convert numeric folder names to integers
+            numeric_folder_names_int = [int(folder)
+                                        for folder in numeric_folder_names]
+
+            # Find depth closest to our desired value
+            dep_folder = numeric_folder_names[numeric_folder_names_int.index(min(numeric_folder_names_int,
+                                                                                 key=lambda x: abs(x - int(dep_desired))))]
+
+            # Find distance closest to our desired value
+
+            directory_path += '/' + dep_folder
+            all_files = listdir(directory_path)
+            filenames_without_extensions_inline = [
+                filename.split('.')[0] for filename in all_files]
+            filenames_without_letters = [filename for filename in filenames_without_extensions_inline if not any(
+                char.isalpha() for char in filename)]
+            filenames_unique = [entry[:5]
+                                for entry in list(set(filenames_without_letters))]
+            filenames_unique_int = [int(filename)
+                                    for filename in filenames_unique]
+            dst_value = filenames_unique[filenames_unique_int.index(
+                min(filenames_unique_int, key=lambda x: abs(x - int(dst_desired))))]
+
             for _i, ext in enumerate(CHANNELS):
-                trace = obspy.read('%s/%s/%s%s.%s' %
+                trace = obspy.read('%s/%s/%s/%s%s.%s' %
                                    (self.path, self.model,
-                                    dep_folder, dep, dst, ext),
+                                    dep_folder, dst_value, dep_folder, ext),
                                    format='sac')[0]
 
                 trace.stats.channel = CHANNELS[_i]
