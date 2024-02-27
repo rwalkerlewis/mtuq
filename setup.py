@@ -49,12 +49,14 @@ class PyTest(test_command):
 ENTRY_POINTS = {
     'readers': [
         'SAC = mtuq.io.readers.SAC:read',
-        ],
+    ],
     'greens_tensor_clients': [
         'AXISEM = mtuq.io.clients.AxiSEM_NetCDF:Client',
         'AXISEM_NETCDF = mtuq.io.clients.AxiSEM_NetCDF:Client',
         'FK = mtuq.io.clients.FK_SAC:Client',
         'FK_SAC = mtuq.io.clients.FK_SAC:Client',
+        'CPS = mtuq.io.clients.CPS_SAC:Client',
+        'CPS_SAC = mtuq.io.clients.CPS_SAC:Client',
         'SPECFEM3D = mtuq.io.clients.SPECFEM3D_SAC:Client',
         'SPECFEM3D_GLOBE = mtuq.io.clients.SPECFEM3D_SAC:Client',
         'SPECFEM3D_SAC = mtuq.io.clients.SPECFEM3D_SAC:Client',
@@ -62,8 +64,8 @@ ENTRY_POINTS = {
         'SPECFEM3D_PKL = mtuq.io.clients.SPECFEM3D_SGT:Client',
         'SEISCLOUD = mtuq.io.clients.seiscloud:Client',
         'SYNGINE = mtuq.io.clients.syngine:Client',
-        ]
-    }
+    ]
+}
 
 
 setup(
@@ -99,7 +101,7 @@ setup(
     # instaseis Fortran extension modules sometimes fail to compile via pip
     # (consider using a conda based installation instead)
     install_requires=[
-        "numpy", 
+        "numpy",
         "scipy",
         "pandas",
         "xarray",
@@ -114,13 +116,13 @@ setup(
         "flake8",
         "pytest",
         "nose",
-        #"instaseis"
+        # "instaseis"
     ],
-    ext_modules = [
+    ext_modules=[
         Extension(
-            'mtuq.misfit.waveform.c_ext_L2', ['mtuq/misfit/waveform/c_ext_L2.c'],
+            'mtuq.misfit.waveform.c_ext_L2', [
+                'mtuq/misfit/waveform/c_ext_L2.c'],
             include_dirs=[numpy.get_include()],
             extra_compile_args=get_compile_args()),
     ],
 )
-

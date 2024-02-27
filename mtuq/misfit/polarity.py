@@ -51,6 +51,9 @@ class PolarityMisfit(object):
     - ``'FK_metadata'``
       Read polarities from FK database
 
+    - ``'CPS_metadata'``
+      Read polarities from CPS database      
+
     - ``'waveform'``
       Determine polarity from full-waveform synthetics (not implemented yet)
 
@@ -62,6 +65,8 @@ class PolarityMisfit(object):
 
     ``FK_database`` (`str`): Path to FK database, required for for `type=FK_metadata`.
 
+    ``CPS_database`` (`str`): Path to CPS database, required for for `type=CPS_metadata`.
+
     .. note:: 
 
       *Convention* : Positive vertical first motions are encoded as +1 and
@@ -71,11 +76,13 @@ class PolarityMisfit(object):
     """
 
     def __init__(self,
-        method='taup',
-        taup_model='ak135',
-        FK_database=None,
-        FK_model=None,
-        **parameters):
+                 method='taup',
+                 taup_model='ak135',
+                 FK_database=None,
+                 FK_model=None,
+                 CPS_database=None,
+                 CPS_model=None,
+                 **parameters):
 
         if not method:
             raise Exception('Undefined parameter: method')
@@ -84,7 +91,8 @@ class PolarityMisfit(object):
         self.taup_model = taup_model
         self.FK_database = FK_database
         self.FK_model = FK_model
-
+        self.CPS_database = CPS_database
+        self.CPS_model = CPS_model
 
         #
         # check parameters
@@ -99,17 +107,21 @@ class PolarityMisfit(object):
             if self.FK_model is None:
                 self.FK_model = basename(self.FK_database)
 
+        elif self.method == 'CPS_metadata':
+            assert self.CPS_database is not None
+            assert exists(self.CPS_database)
+            if self.CPS_model is None:
+                self.CPS_model = basename(self.CPS_database)
+
         else:
             raise TypeError('Bad parameter: method')
 
-
     def __call__(self, data, greens, sources, progress_handle=Null(),
-            set_attributes=False):
+                 set_attributes=False):
 
         # check input arguments
         _check(greens, self.method)
 
- 
         #
         # evaluate misfit
         #
@@ -124,7 +136,6 @@ class PolarityMisfit(object):
 
         # returns a NumPy array of shape (len(sources), 1)
         return values.reshape(len(values), 1)
-
 
     def get_observed(self, data):
         """ Extracts observed polarities from data
@@ -144,13 +155,12 @@ class PolarityMisfit(object):
 
         return observed
 
-
     def get_predicted(self, greens, sources):
         """ Calculates predicted polarities
         """
 
         if type(sources) == mtuq.MomentTensor:
-            sources = sources.as_vector().reshape((1,6))
+            sources = sources.as_vector().reshape((1, 6))
             _calculate = _polarities_mt
 
         elif type(sources) == mtuq.Force:
@@ -165,37 +175,40 @@ class PolarityMisfit(object):
         else:
             raise TypeError
 
-        if self.method=='taup':
+        if self.method == 'taup':
             takeoff_angles = _takeoff_angles_taup(self._taup, greens)
 
             azimuths = _get_azimuths(greens)
 
             predicted = _calculate(sources, takeoff_angles, azimuths)
 
-        elif self.method=='FK_metadata':
+        elif self.method == 'FK_metadata':
             takeoff_angles = _takeoff_angles_FK(self.FK_database, greens)
 
             azimuths = _get_azimuths(greens)
 
             predicted = _calculate(sources, takeoff_angles, azimuths)
 
-        elif self.method=='waveform':
+        elif self.method == 'waveform':
             raise NotImplementedError
 
         return predicted
-
 
     def collect_attributes(self, data, greens):
         """ Collect polarity-related attributes (used for beachball plots)
         """
 
-        if self.method=='taup':
+        if self.method == 'taup':
             takeoff_angles = _takeoff_angles_taup(
                 self._taup, greens)
 
-        elif self.method=='FK_metadata':
+        elif self.method == 'FK_metadata':
             takeoff_angles = _takeoff_angles_FK(
                 self.FK_database, greens)
+
+        elif self.method == 'CPS_metadata':
+            takeoff_angles = _takeoff_angles_CPS(
+                self.CPS_database, greens)
 
         observed = self.get_observed(data)
 
@@ -268,16 +281,16 @@ def _takeoff_angle_taup(taup, depth_in_km, distance_in_deg):
 
 def _polarities_mt(mt_array, takeoff, azimuth):
 
-    n1,n2 = mt_array.shape
-    if n2!= 6:
+    n1, n2 = mt_array.shape
+    if n2 != 6:
         raise Exception('Inconsistent dimensions')
 
-    n3,n4 = len(takeoff), len(azimuth)
-    if n3!=n4:
+    n3, n4 = len(takeoff), len(azimuth)
+    if n3 != n4:
         raise Exception('Inconsistent dimensions')
 
     # prepare arrays
-    polarities = np.zeros((n1,n3))
+    polarities = np.zeros((n1, n3))
     drc = np.empty((n1, 3))
     takeoff = np.deg2rad(takeoff)
     azimuth = np.deg2rad(azimuth)
@@ -294,11 +307,11 @@ def _polarities_mt(mt_array, takeoff, azimuth):
 
         # Aki & Richards 2ed, p. 108, eq. 4.88
         cth = mt_array[:, 0]*drc[:, 2]*drc[:, 2] +\
-              mt_array[:, 1]*drc[:, 0]*drc[:, 0] +\
-              mt_array[:, 2]*drc[:, 1]*drc[:, 1] +\
-           2*(mt_array[:, 3]*drc[:, 0]*drc[:, 2] -
-              mt_array[:, 4]*drc[:, 1]*drc[:, 2] -
-              mt_array[:, 5]*drc[:, 0]*drc[:, 1])
+            mt_array[:, 1]*drc[:, 0]*drc[:, 0] +\
+            mt_array[:, 2]*drc[:, 1]*drc[:, 1] +\
+            2*(mt_array[:, 3]*drc[:, 0]*drc[:, 2] -
+               mt_array[:, 4]*drc[:, 1]*drc[:, 2] -
+               mt_array[:, 5]*drc[:, 0]*drc[:, 1])
 
         polarities[cth > 0, _i] = +1
         polarities[cth < 0, _i] = -1
@@ -339,14 +352,12 @@ def _model_type(greens):
 def _check(greens, method):
     return
 
-    #model = _model_type(greens)
-    #method = _method_type(method)
+    # model = _model_type(greens)
+    # method = _method_type(method)
 
-    #if model != method:
+    # if model != method:
     #    print()
     #    print('  Possible inconsistency?')
     #    print('  Green''s functions are from: %s' % model)
     #    print('  Polarities are from: %s' % method)
     #    print()
-
-
