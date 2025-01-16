@@ -13,14 +13,14 @@ from mtuq.process_data import ProcessData
 from mtuq.util import fullpath, merge_dicts, save_json
 from mtuq.util.cap import parse_station_codes, Trapezoid
 
-
+import pdb
 
 if __name__=='__main__':
     #
     # Carries out grid search over 64,000 double couple moment tensors
     #
     # USAGE
-    #   python SerialGridSearch.DoubleCouple_CPS.py
+    #   python SerialGridSearch.DoubleCouple.py
     #
     # A typical runtime is about 60 seconds. For faster results try 
     # GridSearch.DoubleCouple.py, which runs the same inversion in parallel
@@ -32,22 +32,18 @@ if __name__=='__main__':
     # from a regional seismic array
     #
 
-    path_data=    fullpath('data/examples/20090407201255351/*.[zrt]')
-    path_weights= fullpath('data/examples/20090407201255351/weights.dat')
-    path_greens=  fullpath('data/tests/benchmark_cps/greens/scak')
-
-    # path_greens=  '/home/dockimble/src/mtuq/data/tests/benchmark_cap/greens_cps/scak'
-    # path_data=    '/home/dockimble/src/mtuq/data/examples/20090407201255351/*.[zrt]'
-    # path_weights= '/home/dockimble/src/mtuq/data/examples/20090407201255351/weights.dat'    
-
-    event_id=     '20090407201255351'
-    model=        'scak'
+    path_data=    '/home/dockimble/Projects/mtuq/data/examples/20080418093700/*.[zrt]' # fullpath('data/examples/20080418093700/*.[zrt]')
+    path_weights= '/home/dockimble/Projects/mtuq/data/examples/20080418093700/weights.dat' # fullpath('data/examples/20080418093700/weights.dat')
+    path_greens=  '/home/dockimble/Projects/mtuq/data/tests/benchmark_cps/greens/cus' #fullpath('data/tests/benchmark_cps/greens/cus')    
+    
+    event_id=     '20080418093700'
+    model=        'cus'
 
 
     #
     # Body and surface wave measurements will be made separately
     #
-
+    
     process_bw = ProcessData(
         filter_type='Bandpass',
         freq_min= 0.1,
@@ -71,6 +67,7 @@ if __name__=='__main__':
         )
 
 
+
     #
     # For our objective function, we will use a sum of body and surface wave
     # contributions
@@ -78,9 +75,9 @@ if __name__=='__main__':
 
     misfit_bw = Misfit(
         norm='L2',
-        time_shift_min=-2.,
-        time_shift_max=+2.,
-        time_shift_groups=['ZR'],
+        time_shift_min=-4.,
+        time_shift_max=+4.,
+        time_shift_groups=['ZR', "T"],
         )
 
     misfit_sw = Misfit(
@@ -120,10 +117,10 @@ if __name__=='__main__':
     #
 
     origin = Origin({
-        'time': '2009-04-07T20:12:55.000000Z',
-        'latitude': 61.454200744628906,
-        'longitude': -149.7427978515625,
-        'depth_in_m': 33033.599853515625,
+        'time': '2008-04-18T09:36:58.000000Z',
+        'latitude': 38.4584,
+        'longitude': -87.8398,
+        'depth_in_m': 15800,
         })
 
 
@@ -162,8 +159,10 @@ if __name__=='__main__':
     # The main computational work starts now
     #
 
+
+    # pdb.set_trace()
     print('Evaluating body wave misfit...\n')
-    results_bw = grid_search(data_bw, greens_bw, misfit_bw, origin, grid)
+    results_bw = grid_search(data_bw, greens_bw, misfit_bw, origin, grid, verbose=5)
 
     print('Evaluating surface wave misfit...\n')
     results_sw = grid_search(data_sw, greens_sw, misfit_sw, origin, grid)
