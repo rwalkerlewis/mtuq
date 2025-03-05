@@ -2,7 +2,7 @@
 import numpy as np
 
 from copy import deepcopy
-from mtuq.misfit.waveform import level0, level1, level2
+from mtuq.misfit.waveform import level0, level1, level2, level3
 from mtuq.misfit.waveform._stats import estimate_sigma, calculate_norm_data
 from mtuq.util import Null, iterable, warn
 from mtuq.util.math import isclose, list_intersect_with_indices
@@ -80,7 +80,7 @@ class WaveformMisfit(object):
     .. rubric:: Optimization Levels
 
     Because waveform misfit evaluation is the most computationally expensive 
-    task, we have implemented three different versions: 
+    task, we have implemented four different versions: 
 
     - a readable pure Python version (``mtuq.misfit.level0``)
 
@@ -88,8 +88,9 @@ class WaveformMisfit(object):
 
     - a very fast Python/C version (``mtuq.misfit.level2``)
 
+    - an experimental Python/C/PETSc version (``mtuq.misfit.level3``)
 
-    While having exactly the same input argument syntax, these three versions
+    While having exactly the same input argument syntax, these four versions
     differ in the following ways:
 
     - ``level0`` provides a reference for understanding what the code is doing
@@ -106,6 +107,9 @@ class WaveformMisfit(object):
       implementation requires that all ObsPy traces have the same time
       discretization.
 
+    - ``level3`` is a test to use PETSc to peform the grid search in an all
+      up fashion. This also requires all the ObsPy traces to have the same 
+      discretization.
 
     .. note:: 
 
@@ -121,7 +125,7 @@ class WaveformMisfit(object):
         time_shift_groups=['ZRT'],
         time_shift_min=0.,
         time_shift_max=0.,
-        optimization_level=2,
+        optimization_level=3,
         ):
         """ Function handle constructor
         """
@@ -149,7 +153,7 @@ class WaveformMisfit(object):
                 assert component in ['Z','R','T'],\
                     ValueError("Bad input argument")
 
-        assert optimization_level in [0,1,2]
+        assert optimization_level in [0,1,2,3]
 
         self.norm = norm
         self.time_shift_min = time_shift_min
@@ -165,7 +169,7 @@ class WaveformMisfit(object):
         if optimization_level is None:
             optimization_level = self.optimization_level
 
-        assert optimization_level in [0,1,2]
+        assert optimization_level in [0,1,2,3]
 
         # normally misfit is evaluated over a grid of sources; `iterable`
         # makes things work if just a single source is given
@@ -201,6 +205,11 @@ class WaveformMisfit(object):
 
         if optimization_level==2:
             return level2.misfit(
+                data, greens, sources, self.norm, self.time_shift_groups,
+                self.time_shift_min, self.time_shift_max, progress_handle)
+
+        if optimization_level==3:
+            return level3.misfit(
                 data, greens, sources, self.norm, self.time_shift_groups,
                 self.time_shift_min, self.time_shift_max, progress_handle)
 

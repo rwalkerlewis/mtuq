@@ -10,6 +10,8 @@ from setuptools.command.test import test as test_command
 def get_compile_args():
     compiler = ''
     compile_args = []
+    petsc_dir = '/home/dockimble/Projects/petsc'
+    petsc_arch = 'arch-linux-cxx-debug'
 
     try:
         compiler = os.environ["CC"]
@@ -19,17 +21,33 @@ def get_compile_args():
     if compiler.endswith("icc"):
         compile_args += ['-fast']
         compile_args += ['-march=native']
+        compile_args += ['-I' + petsc_dir + '/include']
+        compile_args += ['-I' + petsc_dir + '/' + petsc_arch + '/include']
+        compile_args += ['-L' + petsc_dir + '/' + petsc_arch + '/lib']
+        compile_args += ['-lpetsc']
 
     elif compiler.endswith("gcc"):
         compile_args += ['-Ofast']
         compile_args += ['-march=native']
-
+        compile_args += ['-I' + petsc_dir + '/include']
+        compile_args += ['-I' + petsc_dir + '/' + petsc_arch + '/include']        
+        compile_args += ['-L' + petsc_dir + '/' + petsc_arch + '/lib']
+        compile_args += ['-lpetsc']
+        
     elif compiler.endswith("clang"):
         compile_args += ['-Ofast']
-
+        compile_args += ['-I' + petsc_dir + '/include']
+        compile_args += ['-I' + petsc_dir + '/' + petsc_arch + '/include']        
+        compile_args += ['-L' + petsc_dir + '/' + petsc_arch + '/lib']
+        compile_args += ['-lpetsc']
+        
     else:
         compile_args += ['-Ofast']
-
+        compile_args += ['-I' + petsc_dir + '/include']
+        compile_args += ['-I' + petsc_dir + '/' + petsc_arch + '/include']        
+        compile_args += ['-L' + petsc_dir + '/' + petsc_arch + '/lib']
+        compile_args += ['-lpetsc']
+        
     return compile_args
 
 
@@ -120,6 +138,10 @@ setup(
             'mtuq.misfit.waveform.c_ext_L2', ['mtuq/misfit/waveform/c_ext_L2.c'],
             include_dirs=[numpy.get_include()],
             extra_compile_args=get_compile_args()),
+        Extension(
+            'mtuq.misfit.waveform.c_ext_PETSc', ['mtuq/misfit/waveform/c_ext_PETSc.c'],
+            include_dirs=[numpy.get_include()],
+            extra_compile_args=get_compile_args())
     ],
 )
 
