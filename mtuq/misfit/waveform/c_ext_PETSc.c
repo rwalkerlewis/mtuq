@@ -219,7 +219,7 @@ PyMODINIT_FUNC PyInit_c_ext_PETSc(void) {
   return PyModule_Create(&misfit_module);
 }
 #else
-PyMODINIT_FUNC initc_ext_L2(void) {
+PyMODINIT_FUNC initc_ext_PETSc(void) {
   (void) Py_InitModule("c_ext_PETSc", methods);
   import_array();
 }
