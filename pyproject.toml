@@ -47,6 +47,11 @@ dependencies = [
   "seisclient",
 ]
 
+[project.optional-dependencies]
+petsc = [
+  "petsc4py>=3.16",
+]
+
 [project.entry-points."readers"]
 SAC = "mtuq.io.readers.SAC:read"
 

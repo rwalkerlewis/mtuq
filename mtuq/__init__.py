@@ -39,6 +39,13 @@ from mtuq.process_data import ProcessData
 # commented out because of namespace conflict
 #from mtuq.grid_search import grid_search
 
+# PETSc-based grid search (optional)
+try:
+    from mtuq.grid_search_petsc import grid_search_petsc
+except ImportError:
+    # PETSc not available
+    pass
+
 
 from pkg_resources import iter_entry_points
 from mtuq.io.clients.syngine import download_greens
