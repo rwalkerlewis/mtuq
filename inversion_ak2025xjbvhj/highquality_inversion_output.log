@@ -1,0 +1,118 @@
+/workspace/mtuq/graphics/uq/_matplotlib.py:849: UserWarning: '
+'
+    You are using the new matplotlib visualization backend, which is currently
+    being tested. If you encounter issues or unexpected behavior, please report
+    them on GitHub.
+       
+  warnings.warn(
+======================================================================
+HIGH-QUALITY STATION INVERSION
+======================================================================
+
+Using 10 highest quality stations (VR > 40%)
+Created high-quality weights file: /workspace/inversion_ak2025xjbvhj/weights_highquality.dat
+
+Reading data...
+Loaded 10 stations
+Processing data...
+Downloading Green's functions from Syngine...
+
+Running fine grid search...
+Grid has 7846875 points
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 7,846,875
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 38.645
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 7,846,875
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 24.588
+
+
+Calculating variance reduction...
+
+======================================================================
+HIGH-QUALITY STATION RESULTS
+======================================================================
+
+Best-fitting moment tensor:
+  Magnitude (Mw): 6.00
+  Moment (M0): 1.26e+18 N·m
+
+Source parameters:
+  kappa (strike): 60.0°
+  sigma (slip): 12.0°
+  h (cos dip): 0.367
+  dip: 68.5°
+
+Lune coordinates:
+  v: -0.193
+  w: 0.181
+  rho: 1.78e+18
+
+MISFIT: 0.165578
+VARIANCE REDUCTION: -1.3327 (-133.3%)
+
+Moment tensor components (N·m):
+  Mrr: 4.76e+16
+  Mtt: -8.75e+17
+  Mpp: 1.11e+18
+  Mrt: 2.51e+16
+  Mrp: 6.20e+17
+  Mtp: 4.50e+17
+
+Generating output files...
+  Created waveform plot
+  Created beachball plot
+
+  Created misfit lune plot
+  Saved solution JSON
+
+Results saved to: /workspace/inversion_ak2025xjbvhj/results_highquality
+
+======================================================================

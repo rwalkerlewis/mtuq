@@ -1,0 +1,19 @@
+HIGH-QUALITY STATION INVERSION RESULTS
+==================================================
+
+Event: ak2025xjbvhj
+Stations used: 10
+Stations: AK.WAT1., AK.WAT7., AK.GHO., AK.CUT., AK.L22K., AK.SAW., AK.WAT6., AK.RND., AK.DHY., AT.PMR.
+
+Results:
+  Mw: 6.00
+  Strike: 60.0°
+  Slip: 12.0°
+  Dip: 68.5°
+
+Lune coordinates:
+  v: -0.193
+  w: 0.181
+
+MISFIT: 0.165578
+VARIANCE REDUCTION: -133.3%

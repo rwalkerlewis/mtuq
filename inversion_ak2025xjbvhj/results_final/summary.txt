@@ -1,0 +1,33 @@
+FINAL OPTIMIZED INVERSION RESULTS
+==================================================
+
+Event: ak2025xjbvhj
+Origin: 2025-11-27T17:11:29.000000Z
+Location: 61.5695°N, -150.7508°E
+Depth: 69.4 km
+Earth model: ak135
+
+Stations used: 10
+Stations: PMR, CUT, GHO, L22K, SAW, WAT7, WAT1, WAT6, RND, DHY
+
+Results:
+  Mw: 6.00
+  M0: 1.26e+18 N·m
+  Strike: 70.0°
+  Slip: 5.0°
+  Dip: 54.3°
+
+Lune coordinates:
+  v: -0.300
+  w: 0.151
+
+*** MISFIT: 0.172815 ***
+*** VARIANCE REDUCTION: 82.7% ***
+
+Moment tensor (N·m):
+  Mrr: -8.07e+16
+  Mtt: -5.62e+17
+  Mpp: 8.77e+17
+  Mrt: 1.30e+17
+  Mrp: 8.30e+17
+  Mtp: 5.78e+17
