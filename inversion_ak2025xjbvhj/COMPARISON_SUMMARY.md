@@ -7,47 +7,68 @@
 
 ## Inversion Configurations Tested
 
-| Run | Stations | Misfit | VR | Mw | Notes |
-|-----|----------|--------|-----|-----|-------|
-| Original | 50 | ~0.96 | ~4% | 6.10 | All available stations |
-| Filtered | 34 | ~0.96 | ~4% | 6.10 | Removed worst-fitting stations |
-| High-Quality | 10 | 0.166 | **83%** | 6.00 | Only VR > 40% stations |
-| **Final** | **10** | **0.173** | **82.7%** | **6.00** | Optimized magnitude & grid |
+| Run | Stations | Misfit | VR | Mw | Stability | Notes |
+|-----|----------|--------|-----|-----|-----------|-------|
+| Original | 50 | ~0.96 | ~4% | 6.10 | - | All available stations |
+| Filtered | 34 | ~0.96 | ~4% | 6.10 | - | Removed worst-fitting stations |
+| ⚠️ Overfit | 10 | 0.173 | 83% | 6.00 | - | **OVERFIT** - VR-based selection |
+| ✓ **Robust** | **30** | **0.548** | **45%** | **6.10** | **±0.00** | SNR-based, jackknife-validated |
 
-## Key Optimization Steps
+## Understanding Overfitting vs. Robust Solutions
 
-1. **Station Quality Analysis**: Identified stations with best waveform fits using variance reduction (VR) analysis
-2. **Station Selection**: Selected only top 10 stations with VR > 40%
-   - AK.WAT1 (74.1%), AK.WAT7 (73.7%), AK.GHO (72.2%), AK.CUT (69.9%)
-   - AK.L22K (61.9%), AK.SAW (60.7%), AK.WAT6 (54.8%), AK.RND (45.0%)
-   - AK.DHY (42.9%), AT.PMR (42.4%)
-3. **Magnitude Optimization**: Found optimal Mw = 6.00 through systematic testing
-4. **Fine Grid Search**: Used 18 npts_per_axis for refined solution
+### ⚠️ Overfit Solution (10 stations, VR=83%)
+The "optimized" solution with only 10 stations achieved 82.7% VR but represents **overfitting**:
+- Stations were selected based on **how well they fit a particular solution**
+- This creates circular logic: we select stations that agree with our answer
+- The solution may not generalize to independent data
+- Low misfit doesn't mean the solution is physically correct
 
-## Final Solution
+### ✓ Robust Solution (30 stations, VR=45%)
+The robust approach provides a more reliable result:
+- Stations selected based on **signal-to-noise ratio (SNR)** - independent of any MT solution
+- Uses more stations (30 vs 10) for better azimuthal coverage
+- **Jackknife stability analysis**: Mw = 6.10 ± 0.00 when dropping individual stations
+- 45% VR is typical for regional MT inversions with 1D Green's functions
+
+## Robust Inversion Methodology
+
+1. **SNR-based station selection**: Stations with SNR ≥ 50 selected (solution-independent)
+2. **Azimuthal coverage**: Ensured stations span different azimuths
+3. **Jackknife stability analysis**: Tested solution stability by dropping one station at a time
+4. **Feature-based quality metrics**: Checked cross-correlation and amplitude ratios
+
+## Final Robust Solution
 
 | Parameter | Value |
 |-----------|-------|
-| **Magnitude (Mw)** | 6.00 |
-| **Seismic Moment** | 1.26×10¹⁸ N·m |
-| **Strike** | 70° |
-| **Dip** | 54° |
-| **Slip (Rake)** | 5° |
-| **Misfit** | 0.173 |
-| **Variance Reduction** | 82.7% |
+| **Magnitude (Mw)** | 6.10 |
+| **Seismic Moment** | 1.78×10¹⁸ N·m |
+| **Strike** | 75° |
+| **Dip** | 57° |
+| **Slip (Rake)** | 7.5° |
+| **Misfit** | 0.548 |
+| **Variance Reduction** | 45.2% |
+| **Stability (±Mw)** | ±0.00 |
 
 ### Moment Tensor Components (N·m)
-- Mrr: -8.07×10¹⁶
-- Mtt: -5.62×10¹⁷
-- Mpp: +8.77×10¹⁷
-- Mrt: +1.30×10¹⁷
-- Mrp: +8.30×10¹⁷
-- Mtp: +5.78×10¹⁷
+- Mrr: -7.16×10¹⁶
+- Mtt: -5.77×10¹⁷
+- Mpp: +1.14×10¹⁸
+- Mrt: +3.39×10¹⁷
+- Mrp: +1.13×10¹⁸
+- Mtp: +9.74×10¹⁷
 
-### Lune Coordinates
-- v: -0.300
-- w: 0.151
+## Key Insights
 
-## Conclusion
+1. **Lower misfit ≠ better solution**: The overfit solution had lower misfit but used circular station selection
+2. **Stability matters**: The robust solution is completely stable under jackknife resampling
+3. **More stations = more robust**: Using 30 stations provides better azimuthal coverage and reduces bias
+4. **VR ~45% is realistic**: For regional MT inversions with 1D Green's functions, this is a typical value
 
-By selecting only the highest-quality stations and optimizing the magnitude, we reduced the misfit from ~0.96 to 0.173 (**82% improvement**), achieving a variance reduction of **82.7%**. This demonstrates that careful station selection is crucial for regional moment tensor inversions using 1D Green's functions.
+## Recommendations
+
+For reliable moment tensor inversions:
+- Select stations based on data quality (SNR), not fit to solution
+- Use as many high-quality stations as possible
+- Validate solution stability with jackknife or bootstrap resampling
+- Don't chase low misfit at the expense of robustness

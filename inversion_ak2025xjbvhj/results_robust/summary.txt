@@ -1,0 +1,28 @@
+ROBUST MOMENT TENSOR INVERSION RESULTS
+==================================================
+
+Event: ak2025xjbvhj
+Origin: 2025-11-27T17:11:29.000000Z
+Location: 61.5695°N, -150.7508°E
+Depth: 69.4 km
+
+Station selection:
+  Method: SNR-based (threshold = 50.0)
+  Stations used: 30
+
+Stability analysis (jackknife):
+  Magnitude: 6.10 ± 0.00
+  Misfit: 0.5477 ± 0.0008
+
+Waveform feature quality:
+  Mean cross-correlation: -0.192
+
+Results:
+  Mw: 6.10
+  M0: 1.78e+18 N·m
+  Strike: 75.0°
+  Slip: 7.5°
+  Dip: 57.2°
+
+Misfit: 0.5476
+Variance Reduction: 45.2%
