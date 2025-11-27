@@ -1,0 +1,176 @@
+/workspace/mtuq/graphics/uq/_matplotlib.py:849: UserWarning: '
+'
+    You are using the new matplotlib visualization backend, which is currently
+    being tested. If you encounter issues or unexpected behavior, please report
+    them on GitHub.
+       
+  warnings.warn(
+======================================================================
+OPTIMIZED MOMENT TENSOR INVERSION
+======================================================================
+
+Using 30 best-fitting stations (VR > 0.1)
+Created optimized weights file: /workspace/inversion_ak2025xjbvhj/weights_optimized.dat
+
+Reading data...
+Loaded 30 stations
+Processing data...
+Downloading Green's functions from Syngine...
+
+Phase 1: Coarse grid search...
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 840,000
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.026
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 840,000
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 4.578
+
+Optimal SW weight: 0.5
+
+Coarse solution: Mw=6.00
+  kappa=54, sigma=-45, h=0.95
+
+Phase 2: Fine grid search around best solution...
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 4,708,125
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 53.130
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 4,708,125
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 24.675
+
+
+Calculating final variance reduction...
+
+======================================================================
+OPTIMIZED RESULTS
+======================================================================
+
+Best-fitting moment tensor:
+  Magnitude (Mw): 6.00
+  Moment (M0): 1.26e+18 N·m
+
+Fault parameters:
+  kappa (strike): 60.0°
+  sigma (slip): -12.0°
+  h (cos dip): 0.633
+  dip: 50.7°
+
+Variance Reduction:
+  Surface waves: -1.5041 (-150.4%)
+  Body waves: -0.8620 (-86.2%)
+  Combined (weighted): -1.1831 (-118.3%)
+
+Moment tensor components (N·m):
+  Mrr: -3.89e+17
+  Mtt: -6.55e+17
+  Mpp: 1.04e+18
+  Mrt: -1.30e+17
+  Mrp: 6.83e+17
+  Mtp: 5.16e+17
+
+Generating output files...
+  Created waveform plot
+  Created beachball plot
+
+  Created misfit lune plot
+  Saved solution JSON
+
+Results saved to: /workspace/inversion_ak2025xjbvhj/results_optimized
+
+======================================================================
+OPTIMIZATION COMPLETE
+======================================================================

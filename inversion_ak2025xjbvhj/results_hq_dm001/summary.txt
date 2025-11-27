@@ -1,0 +1,27 @@
+HIGH-QUALITY INVERSION RESULTS (dM = 0.01)
+==================================================
+
+Event: ak2025xjbvhj
+Origin: 2025-11-27T17:11:29.000000Z
+Location: 61.5695°N, -150.7508°E
+Depth: 69.4 km
+Earth model: ak135
+
+Stations used: 10
+Magnitude resolution: dM = 0.01
+Magnitude range: Mw 5.80 to 6.30
+Magnitudes tested: 51
+
+Results:
+  Mw: 6.02
+  M0: 1.35e+18 N·m
+  Strike: 225.0°
+  Slip: -52.5°
+  Dip: 82.8°
+
+Lune coordinates:
+  v: -0.333
+  w: 0.000
+
+*** MISFIT: 0.182485 ***
+*** VARIANCE REDUCTION: 81.8% ***

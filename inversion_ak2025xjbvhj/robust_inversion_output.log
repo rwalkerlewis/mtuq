@@ -1,0 +1,709 @@
+======================================================================
+ROBUST MOMENT TENSOR INVERSION v2
+(SNR-based station selection, stability analysis)
+======================================================================
+
+Reading data...
+Loaded 34 stations
+
+Calculating signal-to-noise ratios...
+
+Station SNR ranking (solution-independent):
+  AK.RND: SNR = 959.7
+  AK.WAT7: SNR = 695.4
+  AV.RDDF: SNR = 610.0
+  AV.RDJH: SNR = 459.6
+  AK.SCM: SNR = 376.8
+  AV.REF: SNR = 368.6
+  AK.L22K: SNR = 354.5
+  AV.SPCG: SNR = 347.1
+  AK.BRSE: SNR = 311.4
+  AK.BRLK: SNR = 308.4
+  AK.KNK: SNR = 273.0
+  AK.DHY: SNR = 269.7
+  AV.SPBG: SNR = 267.4
+  AV.NCT: SNR = 239.7
+  AV.RDWB: SNR = 228.8
+
+Stations with SNR >= 50.0: 30
+
+Processing selected stations...
+Using 30 stations
+Downloading Green's functions...
+
+======================================================================
+GRID SEARCH
+======================================================================
+
+Grid has 2073600 points
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 21.909
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.877
+
+
+======================================================================
+STABILITY ANALYSIS (jackknife)
+======================================================================
+
+Testing solution stability by dropping individual stations...
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 20.602
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.577
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 20.441
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.506
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 20.397
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.568
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 20.399
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.539
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 20.431
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.451
+
+/workspace/mtuq/graphics/uq/_matplotlib.py:849: UserWarning: '
+'
+    You are using the new matplotlib visualization backend, which is currently
+    being tested. If you encounter issues or unexpected behavior, please report
+    them on GitHub.
+       
+  warnings.warn(
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 20.330
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.468
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 20.558
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.567
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 20.546
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.573
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 20.492
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.515
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 20.361
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 2,073,600
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 10.627
+
+
+Jackknife results (dropping one station at a time):
+  Magnitude: 6.10 ± 0.00
+  Misfit: 0.5477 ± 0.0008
+
+Stations with largest impact on solution:
+  AV.STLK: ΔMw = +0.00
+  AV.SPBL: ΔMw = +0.00
+  AV.SPCG: ΔMw = +0.00
+  AV.SPU: ΔMw = +0.00
+  AT.PMR: ΔMw = +0.00
+
+======================================================================
+FEATURE-BASED QUALITY ASSESSMENT
+======================================================================
+
+Surface wave quality metrics:
+  Cross-correlation: -0.230
+  Amplitude ratio: 1.66 ± 5.55
+  Waveforms analyzed: 90
+
+Body wave quality metrics:
+  Cross-correlation: -0.134
+  Amplitude ratio: 1.22 ± 0.45
+  Waveforms analyzed: 60
+
+======================================================================
+FINAL ROBUST RESULTS
+======================================================================
+
+Best-fitting moment tensor:
+  Magnitude (Mw): 6.10
+  Moment (M0): 1.78e+18 N·m
+
+Source parameters:
+  kappa (strike): 75.0°
+  sigma (slip): 7.5°
+  h (cos dip): 0.542
+  dip: 57.2°
+
+Quality metrics:
+  Number of stations: 30
+  Final misfit: 0.5476
+  Variance Reduction: 45.2%
+  Magnitude stability: ±0.00
+  Mean cross-correlation: -0.192
+
+Moment tensor components (N·m):
+  Mrr: -7.16e+16
+  Mtt: -5.77e+17
+  Mpp: 1.14e+18
+  Mrt: 3.39e+17
+  Mrp: 1.13e+18
+  Mtp: 9.74e+17
+
+Generating output files...
+  Created waveform plot
+  Created beachball plot
+
+  Created misfit lune plot
+
+Results saved to: /workspace/inversion_ak2025xjbvhj/results_robust
+
+======================================================================

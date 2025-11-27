@@ -1,0 +1,23 @@
+OPTIMIZED MOMENT TENSOR INVERSION v2
+==================================================
+
+Event: ak2025xjbvhj
+Stations used: 34
+Processing: Long period (20-50s SW, 12.5-50s BW)
+
+Results:
+  Mw: 6.25
+  Strike: 243.0°
+  Slip: -76.5°
+  Dip: 82.8°
+
+Lune coordinates:
+  v: -0.324
+  w: 0.634
+
+Misfit: 0.949862
+
+Variance Reduction:
+  SW: 0.0%
+  BW: 0.0%
+  Combined: 0.0%

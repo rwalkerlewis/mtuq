@@ -1,0 +1,17 @@
+OPTIMIZED MOMENT TENSOR INVERSION
+==================================================
+
+Event: ak2025xjbvhj
+Stations used: 30
+SW weight: 0.5
+
+Results:
+  Mw: 6.00
+  Strike: 60.0°
+  Slip: -12.0°
+  Dip: 50.7°
+
+Variance Reduction:
+  SW: -150.4%
+  BW: -86.2%
+  Combined: -118.3%
