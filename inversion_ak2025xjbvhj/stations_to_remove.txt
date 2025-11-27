@@ -1,0 +1,17 @@
+# Stations with poor fits (VR < -0.5612)
+AK.L26K.
+AK.BAT.
+AK.GCSA.
+AK.L19K.
+AK.FID.
+AV.SPWE.
+AK.SLK.
+AK.Q19K.
+AK.CAPN.
+AV.SPNN.
+AK.J20K.
+AK.SKN.
+AV.N20K.
+AV.SPCP.
+AK.SWD.
+AK.I23K.
