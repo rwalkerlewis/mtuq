@@ -40,8 +40,8 @@ if __name__ == '__main__':
     })
     
     # Earth model for Green's functions
-    # Using prem_a_10s which supports deep sources and has both vertical/horizontal components
-    model = 'prem_a_10s'
+    # Using ak135 (better for regional distances) - data resampled to 2 Hz for compatibility
+    model = 'ak135'
     
     # Magnitude estimate (used for source-time function)
     magnitude = 6.0
@@ -61,25 +61,25 @@ if __name__ == '__main__':
     #
     
     # For deep earthquakes, surface waves are key - use longer periods
-    # prem_a_10s model has min period of 10s, so use freq_max <= 0.1 Hz
+    # ak135f_2s model supports periods >= 2s
     process_sw = ProcessData(
         filter_type='Bandpass',
-        freq_min=0.015,      # 67 second period
-        freq_max=0.04,       # 25 second period (compatible with 10s model)
+        freq_min=0.02,       # 50 second period
+        freq_max=0.1,        # 10 second period (well within ak135 range)
         pick_type='user_supplied',  # Use picks from weights file
         window_type='surface_wave',
-        window_length=200.,  # window for surface waves
+        window_length=150.,  # window for surface waves
         capuaf_file=path_weights,
     )
     
-    # Body waves - longer period for deep source
+    # Body waves - can use shorter periods with ak135
     process_bw = ProcessData(
         filter_type='Bandpass',
-        freq_min=0.02,       # 50 second period  
-        freq_max=0.05,       # 20 second period
+        freq_min=0.03,       # 33 second period  
+        freq_max=0.15,       # 6.7 second period
         pick_type='user_supplied',  # Use picks from weights file
         window_type='body_wave',
-        window_length=40.,   # window for body waves
+        window_length=30.,   # window for body waves
         capuaf_file=path_weights,
     )
     
