@@ -1,0 +1,141 @@
+/workspace/mtuq/graphics/uq/_matplotlib.py:849: UserWarning: '
+'
+    You are using the new matplotlib visualization backend, which is currently
+    being tested. If you encounter issues or unexpected behavior, please report
+    them on GitHub.
+       
+  warnings.warn(
+Parsing station codes from weights file...
+
+Using 50 stations
+
+Grid size: 1050000 moment tensors
+
+Reading waveform data...
+
+Read 50 stations
+
+Processing data...
+
+Downloading Green's functions from Syngine...
+
+(This may take several minutes for multiple stations)
+
+Processing Green's functions...
+
+============================================================
+Starting grid search over full moment tensor space...
+============================================================
+
+Evaluating surface wave misfit...
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R, T
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 1,050,000
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 21.159
+
+Evaluating body wave misfit...
+
+    Misfit function evaluates
+      (Σ ∫ |d(t) - s(t-t_s)|² dt) / NF
+
+    where the sum is over components
+      Z, R
+
+    and where
+      d(t) is observed data
+      s(t) is synthetic data
+      t_s is a cross-correlation time shift
+      NF = Σ ∫ |d(t)|² dt is a normalization factor
+
+    Misfit function type:
+    WaveformMisfit
+
+    Misfit function implementation:
+    numba
+
+    Number of misfit evaluations: 1,050,000
+
+    percent finished:  0.0
+    percent finished:  25.0
+    percent finished:  50.0
+    percent finished:  75.0
+
+    Elapsed time (s): 7.689
+
+
+============================================================
+RESULTS
+============================================================
+
+Best-fitting moment tensor:
+  Magnitude (Mw): 6.10
+  Moment (M0): 1.78e+18 N·m
+
+Lune/Source coordinates:
+  v: -0.302
+  w: -0.269
+  rho (normalized moment): 2514866859365871104.000
+
+Fault parameters:
+  kappa (strike): 54.0°
+  sigma (slip): -27.0°
+  h (cos dip): 0.650
+
+Interpretation:
+  Approx. gamma (source type): 9.0° (-30=DC, +30=CLVD)
+  Approx. delta (DC deviation): -20.6° (0=DC, ±90=isotropic)
+
+Moment tensor components (in N·m):
+  Mrr: -1.07e+18
+  Mtt: -1.00e+18
+  Mpp: 1.49e+18
+  Mrt: -9.14e+16
+  Mrp: 6.79e+17
+  Mtp: 7.14e+17
+
+Generating output files...
+
+  Created waveform comparison plot
+  Created beachball plot
+
+  Created misfit lune plot
+  Saved solution to ak2025xjbvhj_FMT_solution.json
+  saving NetCDF file: /workspace/inversion_ak2025xjbvhj/results/ak2025xjbvhj_FMT_misfit.nc
+  Warning: Could not save misfit NetCDF: NetCDF: HDF error
+
+============================================================
+INVERSION COMPLETE
+============================================================
+
+Results saved to: /workspace/inversion_ak2025xjbvhj/results
+
+SUMMARY:
+  Event: ak2025xjbvhj
+  Origin: 2025-11-27T17:11:29.000000Z
+  Location: 61.5695°N, -150.7508°W
+  Depth: 69.4 km
+  Magnitude (Mw): 6.10
+
