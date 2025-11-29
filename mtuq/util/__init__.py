@@ -358,3 +358,43 @@ def defaults(kwargs, defaults):
         if key not in kwargs:
            kwargs[key] = defaults[key]
 
+
+# Import moment tensor utilities
+from mtuq.util.moment_tensor import (
+    # Decomposition functions
+    decompose_mt,
+    hudson_params,
+    eig_to_lune,
+    mt_to_lune,
+    principal_axes,
+    nodal_planes,
+    eigenvalues,
+    scalar_moment,
+    moment_magnitude,
+    
+    # Variance reduction utilities
+    variance_reduction,
+    misfit_to_variance_reduction,
+    cross_correlation,
+    
+    # Source creation utilities
+    create_mt_from_sdr,
+    create_pure_dc,
+    create_pure_clvd,
+    create_pure_iso,
+    
+    # Analysis utilities
+    source_type_label,
+    print_mt_summary,
+    mt_to_matrix,
+    eig_to_mt,
+    
+    # Named tuples for structured results
+    SourceDecomposition,
+    HudsonParams,
+    LuneCoords,
+    PrincipalAxes,
+    NodalPlane,
+    NodalPlanes,
+)
+
