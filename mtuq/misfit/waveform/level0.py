@@ -113,7 +113,13 @@ def misfit(data, greens, sources, norm, time_shift_groups,
 
                         s[_k].attrs.norm = norm
 
-                        s[_k].attrs.misfit = value
+                        if normalize:
+                            try:
+                                s[_k].attrs.misfit = value / norm_data
+                            except Exception:
+                                s[_k].attrs.misfit = value
+                        else:
+                            s[_k].attrs.misfit = value
 
                         s[_k].attrs.idx_start = idx_start
                         s[_k].attrs.idx_stop = idx_stop
