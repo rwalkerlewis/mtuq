@@ -45,6 +45,7 @@ dependencies = [
   "cython",
   "seisgen",
   "seisclient",
+  "numba",
 ]
 
 [project.entry-points."readers"]
@@ -55,6 +56,8 @@ AXISEM = "mtuq.io.clients.AxiSEM_NetCDF:Client"
 AXISEM_NETCDF = "mtuq.io.clients.AxiSEM_NetCDF:Client"
 FK = "mtuq.io.clients.FK_SAC:Client"
 FK_SAC = "mtuq.io.clients.FK_SAC:Client"
+FK_GENERATOR = "mtuq.greens_tensor.fk_generator:FKGeneratorClient"
+FK_PYTHON = "mtuq.greens_tensor.fk_generator:FKGeneratorClient"
 CPS = "mtuq.io.clients.CPS_SAC:Client"
 CPS_SAC = "mtuq.io.clients.CPS_SAC:Client"
 SPECFEM3D = "mtuq.io.clients.SPECFEM3D_SAC:Client"
