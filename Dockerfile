@@ -33,10 +33,9 @@ ENV PYTHONUNBUFFERED=1 \
 COPY . /workspace
 
 # Install Python dependencies from pyproject.toml (single source of truth)
-# Also install mpi4py for parallel execution (not in pyproject.toml as it's optional)
+# Use [dev] extras to include development dependencies like mpi4py
 RUN pip install --upgrade pip setuptools wheel && \
-    pip install mpi4py && \
-    pip install -e .
+    pip install -e ".[dev]"
 
 # Create a non-root user for development
 RUN useradd -m -s /bin/bash developer && \
