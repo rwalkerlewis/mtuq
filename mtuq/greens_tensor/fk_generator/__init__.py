@@ -28,8 +28,14 @@ Example usage:
 
 """
 
-from .velocity_model import VelocityModel
+from .velocity_model import VelocityModel, get_velocity_model, get_fkmodels_path
 from .generator import FKGenerator
 from .client import Client as FKGeneratorClient
 
-__all__ = ["VelocityModel", "FKGenerator", "FKGeneratorClient"]
+__all__ = [
+    "VelocityModel",
+    "FKGenerator",
+    "FKGeneratorClient",
+    "get_velocity_model",
+    "get_fkmodels_path",
+]

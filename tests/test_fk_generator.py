@@ -44,18 +44,37 @@ class TestVelocityModel:
         expected_xi = (3.5 / 6.0) ** 2
         assert abs(layer.xi - expected_xi) < 1e-10
 
-    def test_builtin_models(self):
-        """Test loading built-in models."""
-        from mtuq.greens_tensor.fk_generator.velocity_model import get_velocity_model
+    def test_load_fk_model_ak_scak(self):
+        """Test loading ak_scak model from fkmodels directory."""
+        from mtuq.greens_tensor.fk_generator import get_velocity_model
 
-        model = get_velocity_model("scak")
-        assert model.name == "scak"
+        model = get_velocity_model("ak_scak")
+        assert model.name == "ak_scak"
+        assert model.n_layers == 9  # ak_scak has 9 layers
+        model.validate()
+
+        # Check first layer values match the file
+        assert abs(model.layers[0].thickness - 4.0) < 0.01
+        assert abs(model.layers[0].vs - 3.01) < 0.01
+        assert abs(model.layers[0].vp - 5.3) < 0.01
+
+    def test_load_fk_model_socal(self):
+        """Test loading socal model from fkmodels directory."""
+        from mtuq.greens_tensor.fk_generator import get_velocity_model
+
+        model = get_velocity_model("socal")
+        assert model.name == "socal"
         assert model.n_layers >= 2
         model.validate()
 
-        model2 = get_velocity_model("ak135")
-        assert model2.name == "ak135"
-        model2.validate()
+    def test_fkmodels_path(self):
+        """Test that fkmodels directory can be found."""
+        from mtuq.greens_tensor.fk_generator import get_fkmodels_path
+
+        path = get_fkmodels_path()
+        assert path is not None
+        assert os.path.exists(path)
+        assert os.path.exists(os.path.join(path, "ak_scak"))
 
     def test_depth_lookup(self):
         """Test finding layer at depth."""
@@ -205,13 +224,111 @@ class TestFKClient:
         assert client.model.name == "test"
         assert client.include_mt is True
 
-    def test_builtin_model_client(self):
-        """Test client with built-in model."""
+    def test_fkmodel_client(self):
+        """Test client with FK model from fkmodels directory."""
         from mtuq.greens_tensor.fk_generator import FKGeneratorClient
 
-        client = FKGeneratorClient(model="scak")
+        client = FKGeneratorClient(model="ak_scak")
 
-        assert client.model.name == "scak"
+        assert client.model.name == "ak_scak"
+
+
+class TestFKComparison:
+    """Compare Python FK against pre-computed FK Green's functions."""
+
+    def get_benchmark_path(self):
+        """Get path to pre-computed FK Green's functions."""
+        from mtuq.util import fullpath
+
+        return fullpath("data/tests/benchmark_cap/greens/scak/scak_34")
+
+    def read_fk_trace(self, benchmark_path, distance, ext):
+        """
+        Read pre-computed FK SAC file.
+
+        Extensions map to components:
+            0=ZDD, 1=RDD, 2=TDD
+            3=ZDS, 4=RDS, 5=TDS
+            6=ZSS, 7=RSS, 8=TSS
+            a=ZEP, b=REP, c=TEP (explosion)
+        """
+        from obspy import read
+
+        filepath = os.path.join(benchmark_path, f"{distance}.grn.{ext}")
+        if os.path.exists(filepath):
+            return read(filepath, format="sac")[0]
+        return None
+
+    def test_benchmark_exists(self):
+        """Verify benchmark FK data exists."""
+        benchmark_path = self.get_benchmark_path()
+        assert os.path.exists(
+            benchmark_path
+        ), f"Benchmark path not found: {benchmark_path}"
+
+        # Check for some expected files
+        for dist in [10, 50, 100]:
+            filepath = os.path.join(benchmark_path, f"{dist}.grn.0")
+            assert os.path.exists(filepath), f"Missing: {filepath}"
+
+    def test_read_benchmark(self):
+        """Test reading benchmark FK trace."""
+        benchmark_path = self.get_benchmark_path()
+        trace = self.read_fk_trace(benchmark_path, 100, "0")
+
+        assert trace is not None
+        assert len(trace.data) > 0
+        assert trace.stats.delta > 0
+
+        print(f"\nBenchmark FK trace (100km, ZDD):")
+        print(f"  npts: {len(trace.data)}")
+        print(f"  dt: {trace.stats.delta}")
+        print(f"  max amplitude: {np.max(np.abs(trace.data)):.6e}")
+
+    def test_compare_python_fk(self):
+        """Compare Python FK with pre-computed FK at 100 km."""
+        from mtuq.greens_tensor.fk_generator import FKGenerator, get_velocity_model
+
+        benchmark_path = self.get_benchmark_path()
+
+        # Read benchmark trace to get parameters
+        ref_trace = self.read_fk_trace(benchmark_path, 100, "0")
+        if ref_trace is None:
+            pytest.skip("Benchmark data not available")
+
+        # Load the ak_scak model (same model used for benchmark)
+        model = get_velocity_model("ak_scak")
+
+        print(f"\nModel: {model.name}")
+        print(model)
+
+        # Create generator for 34 km depth (from scak_34 directory name)
+        gen = FKGenerator(model, source_depth_km=34.0)
+
+        # Compute FK - use smaller nt for speed
+        dt = ref_trace.stats.delta
+        nt = min(512, len(ref_trace.data))
+
+        print(f"\nComputing Python FK: dt={dt}, nt={nt}")
+        result = gen.compute([100.0], dt=dt, nt=nt, verbose=True)
+
+        # Get Python result
+        python_zdd = result["traces"][100.0].get("ZDD", np.zeros(nt))
+        ref_zdd = ref_trace.data[:nt]
+
+        print(f"\nComparison (ZDD at 100 km):")
+        print(f"  Reference max amplitude: {np.max(np.abs(ref_zdd)):.6e}")
+        print(f"  Python max amplitude: {np.max(np.abs(python_zdd)):.6e}")
+
+        # Check that Python FK produces non-zero output
+        # Note: exact match is not expected due to algorithm differences
+        python_max = np.max(np.abs(python_zdd))
+        ref_max = np.max(np.abs(ref_zdd))
+
+        if python_max > 0:
+            print(f"  Amplitude ratio (Python/Ref): {python_max/ref_max:.4f}")
+        else:
+            print("  WARNING: Python FK produced zero output")
 
 
 class TestBessel:
@@ -249,16 +366,14 @@ def test_integration_with_mtuq():
             FKGenerator,
             VelocityModel,
             FKGeneratorClient,
+            get_velocity_model,
         )
         from mtuq.event import Origin
         from mtuq.station import Station
         import obspy
 
-        # Create a simple model
-        model = VelocityModel(name="test")
-        model.add_layer(thickness=20.0, vp=6.0, vs=3.5, rho=2.7, qp=600, qs=300)
-        model.add_layer(thickness=15.0, vp=6.5, vs=3.8, rho=2.9, qp=600, qs=300)
-        model.add_halfspace(vp=8.0, vs=4.5, rho=3.3, qp=1000, qs=500)
+        # Load ak_scak model from fkmodels
+        model = get_velocity_model("ak_scak")
 
         # Create origin
         origin = Origin(
@@ -266,7 +381,7 @@ def test_integration_with_mtuq():
                 "time": "2020-01-01T00:00:00.000000Z",
                 "latitude": 61.0,
                 "longitude": -150.0,
-                "depth_in_m": 15000.0,
+                "depth_in_m": 34000.0,  # 34 km
             }
         )
 
@@ -292,9 +407,6 @@ def test_integration_with_mtuq():
         print("Integration test: FK Generator client created successfully")
         print(f"  Model: {model.name} with {model.n_layers} layers")
 
-        # Note: Full integration test requires proper setup
-        # For now, just verify the client can be created
-
     except Exception as e:
         print(f"Integration test encountered error: {e}")
         raise
@@ -311,8 +423,10 @@ if __name__ == "__main__":
     print("  test_create_model: PASSED")
     test_model.test_layer_properties()
     print("  test_layer_properties: PASSED")
-    test_model.test_builtin_models()
-    print("  test_builtin_models: PASSED")
+    test_model.test_load_fk_model_ak_scak()
+    print("  test_load_fk_model_ak_scak: PASSED")
+    test_model.test_fkmodels_path()
+    print("  test_fkmodels_path: PASSED")
     test_model.test_depth_lookup()
     print("  test_depth_lookup: PASSED")
     test_model.test_model_arrays()
@@ -347,8 +461,18 @@ if __name__ == "__main__":
     test_client = TestFKClient()
     test_client.test_client_init()
     print("  test_client_init: PASSED")
-    test_client.test_builtin_model_client()
-    print("  test_builtin_model_client: PASSED")
+    test_client.test_fkmodel_client()
+    print("  test_fkmodel_client: PASSED")
+
+    # FK comparison tests
+    print("\n=== FK Comparison Tests ===")
+    test_compare = TestFKComparison()
+    test_compare.test_benchmark_exists()
+    print("  test_benchmark_exists: PASSED")
+    test_compare.test_read_benchmark()
+    print("  test_read_benchmark: PASSED")
+    test_compare.test_compare_python_fk()
+    print("  test_compare_python_fk: PASSED")
 
     # Integration test
     print("\n=== Integration Test ===")

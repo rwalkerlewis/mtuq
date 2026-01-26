@@ -270,14 +270,33 @@ class FKGenerator:
 
         # Model arrays for computation
         model_arrays = self.model.to_arrays()
+        d = model_arrays["d"]
+        vp = model_arrays["vp"]
+        vs = model_arrays["vs"]
+        rho = model_arrays["rho"]
+        qp = model_arrays["qp"]
+        qs = model_arrays["qs"]
+        mu_arr = model_arrays["mu"]
 
-        # Import kernel functions
-        from .kernel import integrate_wavenumber
+        # Import Numba-optimized kernel functions
+        from .kernel_numba import integrate_wavenumber_numba, compute_source_coef
+
+        # Recompute source coefficients for Numba
+        si_numba = np.zeros((3, 6), dtype=np.float64)
+        src_idx = (
+            self.src_layer - 1
+            if self.flip > 0
+            else self.model.n_layers - self.src_layer
+        )
+        src_layer = self.model.layers[src_idx]
+        compute_source_coef(
+            self.source_type, src_layer.xi, src_layer.mu, float(self.flip), si_numba
+        )
 
         # Frequency loop
         for j in range(wc1, nfft2 + 1):
             omega_real = (j - 1) * dw
-            omega = complex(omega_real, -sigma)
+            omega_i = -sigma
 
             if omega_real < EPSILON:
                 continue
@@ -286,17 +305,24 @@ class FKGenerator:
             k_min = omega_real * pmin + 0.5 * dk
             k_max = np.sqrt(kc**2 + (pmax * omega_real) ** 2)
 
-            # Integrate over wavenumber
-            freq_sums = integrate_wavenumber(
-                omega,
-                model_arrays,
+            # Integrate over wavenumber using Numba
+            freq_sums = integrate_wavenumber_numba(
+                omega_real,
+                omega_i,
+                d,
+                vp,
+                vs,
+                rho,
+                qp,
+                qs,
+                mu_arr,
                 self.model.n_layers,
                 self.src_layer,
                 self.rcv_layer,
                 self.source_type,
                 self.updn,
-                self.flip,
-                self.si,
+                float(self.flip),
+                si_numba,
                 distances_km,
                 k_min,
                 k_max,

@@ -339,18 +339,25 @@ class VelocityModel:
         return "\n".join(lines)
 
     @classmethod
-    def from_file(cls, filepath: str) -> "VelocityModel":
+    def from_file(cls, filepath: str, format: str = "fk") -> "VelocityModel":
         """
         Load velocity model from file.
 
         Supports multiple formats:
         - JSON format
-        - Simple text format (FK style)
+        - FK model format (default):
+            [thickness | Vs | Vp or Vp/Vs | rho | Qs | Qp]
+            If column 3 < 2, it's interpreted as Vp/Vs ratio
+            If rho not given: rho = -0.77 + 0.32*Vp
+            If Qs not given: Qs = 500
+            If Qp not given: Qp = 2*Qs
 
         Parameters
         ----------
         filepath : str
             Path to model file
+        format : str
+            File format: 'fk' (default) or 'json'
 
         Returns
         -------
@@ -365,11 +372,12 @@ class VelocityModel:
             content = f.read().strip()
 
         # Try JSON format
-        if content.startswith("{"):
+        if content.startswith("{") or format == "json":
             data = json.loads(content)
             return cls.from_dict(data)
 
-        # Parse text format
+        # Parse FK text format:
+        # [thickness | Vs | Vp or Vp/Vs | rho | Qs | Qp]
         model = cls(name=name)
         lines = [
             l.strip()
@@ -379,13 +387,35 @@ class VelocityModel:
 
         for line in lines:
             parts = line.split()
-            if len(parts) >= 4:
+            if len(parts) >= 3:
                 thickness = float(parts[0])
-                vp = float(parts[1])
-                vs = float(parts[2])
-                rho = float(parts[3])
-                qp = float(parts[4]) if len(parts) > 4 else 1000.0
-                qs = float(parts[5]) if len(parts) > 5 else 500.0
+                vs = float(parts[1])
+                vp_or_ratio = float(parts[2])
+
+                # If third column < 2, it's Vp/Vs ratio, else it's Vp
+                if vp_or_ratio < 2.0:
+                    vp = vs * vp_or_ratio
+                else:
+                    vp = vp_or_ratio
+
+                # Density: use provided value or compute from Vp
+                if len(parts) > 3:
+                    col4 = float(parts[3])
+                    # If column 4 < 20, it's density; else it's Qs
+                    if col4 < 20:
+                        rho = col4
+                        qs = float(parts[4]) if len(parts) > 4 else 500.0
+                        qp = float(parts[5]) if len(parts) > 5 else 2 * qs
+                    else:
+                        # Column 4 is Qs
+                        rho = -0.77 + 0.32 * vp
+                        qs = col4
+                        qp = float(parts[4]) if len(parts) > 4 else 2 * qs
+                else:
+                    # Compute density from Vp
+                    rho = -0.77 + 0.32 * vp
+                    qs = 500.0
+                    qp = 1000.0
 
                 if thickness < 1e-6:
                     model.add_halfspace(vp=vp, vs=vs, rho=rho, qp=qp, qs=qs)
@@ -466,63 +496,78 @@ class VelocityModel:
                     )
 
 
-# Pre-defined velocity models
-def get_scak_model() -> VelocityModel:
+def get_fkmodels_path() -> str:
     """
-    Get the SCAK (Southern California - Alaska) velocity model.
+    Get the path to the fkmodels directory.
 
-    This is commonly used for regional seismology in Alaska.
+    Returns
+    -------
+    str
+        Path to fkmodels directory, or None if not found
     """
-    model = VelocityModel(name="scak")
-    model.add_layer(thickness=4.0, vp=5.3, vs=3.2, rho=2.4, qp=600, qs=300)
-    model.add_layer(thickness=9.0, vp=5.6, vs=3.3, rho=2.67, qp=600, qs=300)
-    model.add_layer(thickness=21.0, vp=6.2, vs=3.7, rho=2.8, qp=600, qs=300)
-    model.add_layer(thickness=11.0, vp=7.2, vs=4.0, rho=3.1, qp=600, qs=300)
-    model.add_halfspace(vp=7.9, vs=4.5, rho=3.38, qp=600, qs=300)
-    return model
+    import os
 
+    # Try relative to mtuq package
+    pkg_dir = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
+    fkmodels_path = os.path.join(pkg_dir, "data", "fkmodels")
+    if os.path.exists(fkmodels_path):
+        return fkmodels_path
 
-def get_ak135_model() -> VelocityModel:
-    """
-    Get a simplified AK135 velocity model (upper crust/mantle only).
-    """
-    model = VelocityModel(name="ak135")
-    model.add_layer(thickness=20.0, vp=5.8, vs=3.46, rho=2.72, qp=600, qs=300)
-    model.add_layer(thickness=15.0, vp=6.5, vs=3.85, rho=2.92, qp=600, qs=300)
-    model.add_halfspace(vp=8.04, vs=4.48, rho=3.32, qp=1000, qs=500)
-    return model
+    # Try from workspace root
+    workspace_path = os.path.join(os.path.dirname(pkg_dir), "data", "fkmodels")
+    if os.path.exists(workspace_path):
+        return workspace_path
 
-
-# Registry of built-in models
-BUILTIN_MODELS = {
-    "scak": get_scak_model,
-    "ak135": get_ak135_model,
-}
+    return None
 
 
 def get_velocity_model(name_or_path: str) -> VelocityModel:
     """
     Get a velocity model by name or load from file.
 
+    Looks for models in:
+    1. The fkmodels directory (data/fkmodels/)
+    2. Provided file path
+
     Parameters
     ----------
     name_or_path : str
-        Model name (for built-in models) or path to model file
+        Model name (for fkmodels) or path to model file
 
     Returns
     -------
     VelocityModel
         Velocity model
     """
-    if name_or_path in BUILTIN_MODELS:
-        return BUILTIN_MODELS[name_or_path]()
-
     import os
 
+    # Check fkmodels directory first
+    fkmodels_dir = get_fkmodels_path()
+    if fkmodels_dir:
+        fkmodel_path = os.path.join(fkmodels_dir, name_or_path)
+        if os.path.exists(fkmodel_path):
+            return VelocityModel.from_file(fkmodel_path)
+
+    # Check if it's a direct file path
     if os.path.exists(name_or_path):
         return VelocityModel.from_file(name_or_path)
 
+    # List available models
+    available = []
+    if fkmodels_dir and os.path.exists(fkmodels_dir):
+        available = [
+            f
+            for f in os.listdir(fkmodels_dir)
+            if not f.startswith(".")
+            and not f.endswith(".md")
+            and f != "README"
+            and f != "doc"
+            and os.path.isfile(os.path.join(fkmodels_dir, f))
+        ]
+
     raise ValueError(
         f"Unknown model '{name_or_path}'. "
-        f"Available built-in models: {list(BUILTIN_MODELS.keys())}"
+        f"Available models in fkmodels/: {sorted(available)}"
     )
