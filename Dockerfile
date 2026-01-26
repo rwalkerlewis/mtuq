@@ -29,16 +29,14 @@ ENV PYTHONUNBUFFERED=1 \
     OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1 \
     OMPI_MCA_btl_vader_single_copy_mechanism=none
 
-# Copy requirements files
-COPY pyproject.toml setup.py ./
-
-# Install Python dependencies including mpi4py for parallel execution
-RUN pip install --upgrade pip setuptools wheel && \
-    pip install "numpy<2" scipy obspy instaseis pandas xarray netCDF4 h5py tables retry flake8 nose pytest cython seisgen seisclient mpi4py
-
-# Install mtuq in development mode
+# Copy the full source to install dependencies from pyproject.toml
 COPY . /workspace
-RUN pip install -e .
+
+# Install Python dependencies from pyproject.toml (single source of truth)
+# Also install mpi4py for parallel execution (not in pyproject.toml as it's optional)
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install mpi4py && \
+    pip install -e .
 
 # Create a non-root user for development
 RUN useradd -m -s /bin/bash developer && \
